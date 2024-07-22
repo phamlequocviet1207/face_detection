@@ -2,8 +2,14 @@
 
 import cv2
 import mediapipe as mp
+import os
 
-img_path = './data/male_1.jpg'
+output_dir = './output'
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
+
+
+img_path = './data/dog.jpg'
 img = cv2.imread(img_path)
 
 H,W, _ = img.shape
@@ -11,7 +17,7 @@ H,W, _ = img.shape
 face_detect = mp.solutions.face_detection
 
 
-
+# face detect
 with face_detect.FaceDetection(min_detection_confidence=0.5, model_selection=0) as face_detect:
     img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     out = face_detect.process(img_rgb)
@@ -30,24 +36,12 @@ with face_detect.FaceDetection(min_detection_confidence=0.5, model_selection=0) 
         h = int(h*H)
 
         cv2.rectangle(img, (x1,y1), (x1+w, y1+h), (0,255,0), 10)
+        img[y1:y1 + h, x1: x1 + w, :] = cv2.blur(img[y1:y1 + h, x1: x1 + w, :], (90,90), )
 
     cv2.imshow("img", img)
     cv2.waitKey(0)
 
-# cv2.release()
+#save img
+cv2.imwrite(os.path.join(output_dir, 'output.png'), img)
 cv2.destroyAllWindows()
 
-
-# cap = cv2.VideoCapture(0)
-#
-# while True:
-#     ret, frame = cap.read()
-#
-#     # frame = cv2.resize((800,800))
-#
-#     cv2.imshow('frame', frame)
-#     if cv2.waitKey(1) & 0xFF == ord('q'):
-#         break
-#
-# cap.release()
-# cv2.destroyAllWindows()
