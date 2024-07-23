@@ -26,7 +26,7 @@ with face_detect.FaceDetection(min_detection_confidence=0.5, model_selection=0) 
 
                 cv2.rectangle(frame, (x1, y1), (x1 + w, y1 + h), (0, 255, 0), 10)
 
-
+                frame[y1: y1+h, x1:x1+w, :] = cv2.blur(frame[y1: y1+h, x1:x1+w, :], (50,50))
 
         cv2.imshow('frame',frame)
 
